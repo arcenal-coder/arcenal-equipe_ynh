@@ -35,7 +35,7 @@ jobs:
         run: |
           mkdir -p release
           cp target/${{ matrix.target }}/release/arcenal-equipe release/
-          curl --fail --location --proto '=https' https://www.gnu.org/licenses/gpl-3.0.txt -o release/COPYING
+          curl --fail --location --proto '=https' --retry 3 --connect-timeout 10 --max-time 60 https://raw.githubusercontent.com/spdx/license-list-data/main/text/GPL-3.0-or-later.txt -o release/COPYING
           cp LICENSE release/LICENSE
           tar -czf arcenal-equipe-linux-${{ matrix.architecture }}.tar.gz -C release .
       - uses: actions/upload-artifact@v4

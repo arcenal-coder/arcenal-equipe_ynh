@@ -38,6 +38,10 @@ Sous-chemin, backup/restore et changement d’URL en ÉCHEC HTTP 404 pour `/path
 Cause identifiée : Axum 0.8 distingue un préfixe avec slash final. Le montage
 du routeur est corrigé et un test couvre l’accueil et l’API en sous-chemin.
 
+La construction de l’alpha.2 a rencontré un blocage réseau vers gnu.org,
+après compilation réussie. La copie complète de GPL est désormais téléchargée
+depuis le miroir SPDX GitHub avec délais et retries bornés.
+
 | Contrôle | Résultat | Preuve |
 |---|---|---|
 | Linter Rust, syntaxe JS/Bash, compilation | RÉUSSI | GitHub Actions `Vérifier le service natif` |
