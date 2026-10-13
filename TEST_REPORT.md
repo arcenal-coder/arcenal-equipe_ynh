@@ -33,6 +33,11 @@ Le checker a ensuite reçu HTTP 401 pour sa connexion SSO de test. Le mot de
 passe des comptes factices du conteneur est aligné sur celui déclaré par
 package_check avant installation ; cela ne concerne aucun compte de production.
 
+Rapport e0d625e sur YunoHost 12.1.41.2 : installation root et upgrade RÉUSSIS.
+Sous-chemin, backup/restore et changement d’URL en ÉCHEC HTTP 404 pour `/path/`.
+Cause identifiée : Axum 0.8 distingue un préfixe avec slash final. Le montage
+du routeur est corrigé et un test couvre l’accueil et l’API en sous-chemin.
+
 | Contrôle | Résultat | Preuve |
 |---|---|---|
 | Linter Rust, syntaxe JS/Bash, compilation | RÉUSSI | GitHub Actions `Vérifier le service natif` |

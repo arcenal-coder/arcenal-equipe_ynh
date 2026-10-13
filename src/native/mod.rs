@@ -145,12 +145,7 @@ pub async fn run() -> Result<(), Box<dyn std::error::Error>> {
         .route("/profiles/{name}", get(profile))
         .layer(DefaultBodyLimit::max(8 * 1024 * 1024))
         .layer(middleware::from_fn_with_state(state.clone(), guard));
-    let router = if state.config.base.is_empty() {
-        routes
-    } else {
-        Router::new().nest(&state.config.base, routes)
-    }
-    .with_state(state.clone());
+    let router = mount(&state.config.base, routes).with_state(state.clone());
     let listener = tokio::net::UnixListener::bind(&state.config.socket)?;
     use std::os::unix::fs::PermissionsExt;
     std::fs::set_permissions(&state.config.socket, std::fs::Permissions::from_mode(0o660))?;
@@ -161,6 +156,36 @@ pub async fn run() -> Result<(), Box<dyn std::error::Error>> {
         })
         .await?;
     Ok(())
+}
+fn mount<S: Clone + Send + Sync + 'static>(base: &str, routes: Router<S>) -> Router<S> {
+    if base.is_empty() {
+        routes
+    } else {
+        Router::new().nest(&format!("{base}/"), routes)
+    }
+}
+
+#[cfg(test)]
+#[tokio::test]
+async fn yunohost_subpath_matches_trailing_slash_and_api() {
+    use tower::ServiceExt;
+    let routes = Router::new()
+        .route("/", get(|| async { "home" }))
+        .route("/api/recruitment", get(|| async { "data" }));
+    let router = mount("/equipe", routes);
+    for uri in ["/equipe/", "/equipe/api/recruitment"] {
+        let response = router
+            .clone()
+            .oneshot(
+                axum::http::Request::builder()
+                    .uri(uri)
+                    .body(axum::body::Body::empty())
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+        assert_eq!(response.status(), StatusCode::OK, "{uri}");
+    }
 }
 async fn guard(State(app): State<App>, request: Request, next: Next) -> Response {
     let provided = request
