@@ -1,0 +1,8 @@
+/target/
+*.sock
+.env
+*.env
+!conf/server.env
+__pycache__/
+# Local project state may contain client-specific observations; keep it off public GitHub.
+.arcenal/

@@ -1,0 +1,29 @@
+[Unit]
+Description=ARCenal Équipe native
+After=network.target slapd.service postgresql.service
+
+[Service]
+Type=simple
+User=__APP__
+Group=www-data
+SupplementaryGroups=__APP__
+WorkingDirectory=__INSTALL_DIR__
+EnvironmentFile=__INSTALL_DIR__/config/server.env
+ExecStart=__INSTALL_DIR__/bin/arcenal-equipe serve
+Restart=on-failure
+RestartSec=3
+RuntimeDirectory=__APP__
+RuntimeDirectoryMode=0750
+RuntimeDirectoryPreserve=no
+UMask=0007
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=__DATA_DIR__ /run/__APP__
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

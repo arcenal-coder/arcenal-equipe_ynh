@@ -1,0 +1,60 @@
+name: Vérifier le service natif
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: fixture-only
+          POSTGRES_DB: equipe_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      TEST_DATABASE_URL: postgres://postgres:fixture-only@127.0.0.1:5432/equipe_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - run: cargo fmt -- --check
+      - run: cargo clippy --locked --all-targets -- -D warnings
+      - run: cargo check --locked --all-targets
+      - run: cargo test --locked
+      - run: cargo build --locked
+      - run: python3 -B -m unittest discover -s tests -v
+      - run: node --check static/native.js && node --check static/recruitment.js && node --check static/app.js
+      - run: bash -n scripts/install scripts/upgrade scripts/remove scripts/backup scripts/restore scripts/_common.sh
+  linux:
+    strategy:
+      matrix:
+        include:
+          - runner: ubuntu-latest
+            architecture: amd64
+            target: x86_64-unknown-linux-musl
+          - runner: ubuntu-24.04-arm
+            architecture: arm64
+            target: aarch64-unknown-linux-musl
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y musl-tools
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+      - run: cargo build --locked --release --target ${{ matrix.target }}
+        env:
+          RUSTFLAGS: -C target-feature=+crt-static
+          CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_LINKER: musl-gcc
+          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_LINKER: musl-gcc
+      - uses: actions/upload-artifact@v4
+        with:
+          name: native-${{ matrix.architecture }}
+          path: target/${{ matrix.target }}/release/arcenal-equipe

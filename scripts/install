@@ -1,0 +1,13 @@
+#!/bin/bash
+source _common.sh
+source /usr/share/yunohost/helpers
+
+arcenal_deploy_files
+signing_key="$(ynh_string_random --length=48)"
+proxy_key="$(ynh_string_random --length=48)"
+ynh_app_setting_set --key=signing_key --value="$signing_key"
+ynh_app_setting_set --key=proxy_key --value="$proxy_key"
+ynh_config_add --template=server.env --destination="$install_dir/config/server.env"
+chmod 640 "$install_dir/config/server.env"
+chown "root:$app" "$install_dir/config/server.env"
+arcenal_configure

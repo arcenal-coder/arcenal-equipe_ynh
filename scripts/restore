@@ -1,0 +1,14 @@
+#!/bin/bash
+source ../settings/scripts/_common.sh
+source /usr/share/yunohost/helpers
+
+ynh_restore "$install_dir"
+ynh_restore "$data_dir"
+ynh_restore "/etc/nginx/conf.d/$domain.d/$app.conf"
+ynh_restore "/etc/systemd/system/$app.service"
+ynh_psql_db_shell < db.sql
+systemctl daemon-reload
+systemctl enable "$app.service" --quiet
+yunohost service add "$app" --description="ARCenal Équipe POC"
+ynh_systemctl --service="$app" --action=start
+ynh_systemctl --service=nginx --action=reload

@@ -1,0 +1,19 @@
+test_format = 1.0
+
+[default]
+    [default.curl_tests]
+    private_home.path = "/"
+    private_home.logged_on_sso = true
+    private_home.expect_title = "ARCenal Équipe"
+    private_home.auto_test_assets = true
+
+    elise.path = "/agents/elise"
+    elise.logged_on_sso = true
+    elise.expect_content = "Pipeline candidats"
+
+    recruitment.path = "/recrutement"
+    recruitment.expect_content = "Nos offres d’emploi"
+
+    private_api.path = "/api/recruitment"
+    private_api.logged_on_sso = true
+    private_api.expect_content = "arcenal"

@@ -1,0 +1,61 @@
+name: Construire une candidate Linux
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Version de candidate publique
+        required: true
+        default: v0.2.0-alpha.1
+permissions:
+  contents: write
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - runner: ubuntu-latest
+            architecture: amd64
+            target: x86_64-unknown-linux-musl
+          - runner: ubuntu-24.04-arm
+            architecture: arm64
+            target: aarch64-unknown-linux-musl
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y musl-tools
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+      - run: cargo build --locked --release --target ${{ matrix.target }}
+        env:
+          RUSTFLAGS: -C target-feature=+crt-static
+          CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_LINKER: musl-gcc
+          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_LINKER: musl-gcc
+      - name: Préparer le binaire et la licence
+        run: |
+          mkdir -p release
+          cp target/${{ matrix.target }}/release/arcenal-equipe release/
+          curl --fail --location --proto '=https' https://www.gnu.org/licenses/gpl-3.0.txt -o release/COPYING
+          cp LICENSE release/LICENSE
+          tar -czf arcenal-equipe-linux-${{ matrix.architecture }}.tar.gz -C release .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.architecture }}
+          path: arcenal-equipe-linux-${{ matrix.architecture }}.tar.gz
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: release-*
+          merge-multiple: true
+      - name: Publier uniquement une prérelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          [[ "$TAG" =~ ^v0\.2\.0-alpha\.[0-9]+$ ]]
+          sha256sum arcenal-equipe-linux-*.tar.gz > SHA256SUMS
+          gh release create "$TAG" --target "$GITHUB_SHA" --prerelease --title "ARCenal Équipe $TAG — candidate" --notes "Candidate Linux. Les preuves YunoHost et la réception restent requises avant promotion Store." arcenal-equipe-linux-*.tar.gz SHA256SUMS
