@@ -2,12 +2,17 @@
 source _common.sh
 source /usr/share/yunohost/helpers
 
+ynh_script_progression "Installation des fichiers ARCenal Équipe..."
 arcenal_deploy_files
 signing_key="$(ynh_string_random --length=48)"
 proxy_key="$(ynh_string_random --length=48)"
 ynh_app_setting_set --key=signing_key --value="$signing_key"
 ynh_app_setting_set --key=proxy_key --value="$proxy_key"
+ynh_script_progression "Préparation de la configuration protégée..."
 ynh_config_add --template=server.env --destination="$install_dir/config/server.env"
 chmod 640 "$install_dir/config/server.env"
 chown "root:$app" "$install_dir/config/server.env"
+ynh_script_progression "Configuration de l’accès YunoHost et démarrage..."
+ynh_config_add_nginx
 arcenal_configure
+ynh_script_progression "ARCenal Équipe installée."

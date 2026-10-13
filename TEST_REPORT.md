@@ -20,6 +20,11 @@ téléchargement des sources ; aucun cycle YunoHost n’est déclaré réussi.
 Le runner autorise désormais explicitement le transfert du réseau incusbr0
 et les scénarios root/subdir sont fixés pour cette application web.
 
+L’environnement réseau est maintenant joignable. Le checker a révélé une
+directive `only` non autorisée sur la suite default et une description de
+paquet manquante. La suite par défaut est rétablie sans exclusion ; la détection
+web du script install et la documentation sont corrigées.
+
 | Contrôle | Résultat | Preuve |
 |---|---|---|
 | Linter Rust, syntaxe JS/Bash, compilation | RÉUSSI | GitHub Actions `Vérifier le service natif` |

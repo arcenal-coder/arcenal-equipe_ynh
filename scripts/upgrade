@@ -4,5 +4,6 @@ source /usr/share/yunohost/helpers
 
 ynh_systemctl --service="$app" --action=stop
 arcenal_deploy_files
+ynh_config_add_nginx
 # Keep the protected server configuration, including future Hermes settings.
 arcenal_configure

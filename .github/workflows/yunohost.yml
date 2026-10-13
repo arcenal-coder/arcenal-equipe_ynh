@@ -31,6 +31,7 @@ jobs:
         run: |
           git clone --depth=1 https://github.com/YunoHost/package_check /tmp/package_check
           python3 tools/prepare_package_check.py /tmp/package_check
+          python3 /tmp/package_check/lib/parse_tests_toml.py "$GITHUB_WORKSPACE" > /tmp/package_plan.json
           sudo env YNHDEV_BACKEND=incus DIST=bookworm YNH_BRANCH=stable /tmp/package_check/package_check.sh "$GITHUB_WORKSPACE"
           sudo chown -R "$USER:$USER" /tmp/package_check
           python3 tools/verify_package_report.py /tmp/package_check
@@ -42,4 +43,5 @@ jobs:
           path: |
             /tmp/package_check/results_*.json
             /tmp/package_check/full_log_*.log
+            /tmp/package_plan.json
           if-no-files-found: warn

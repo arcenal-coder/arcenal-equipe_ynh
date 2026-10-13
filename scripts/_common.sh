@@ -27,7 +27,6 @@ arcenal_deploy_files() {
 }
 
 arcenal_configure() {
-    ynh_config_add_nginx
     chmod 600 "/etc/nginx/conf.d/$domain.d/$app.conf"
     chown root:root "/etc/nginx/conf.d/$domain.d/$app.conf"
     ynh_config_add_systemd
