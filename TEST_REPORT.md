@@ -2,6 +2,10 @@
 
 Statut : candidate native ; réception YunoHost en préparation.
 
+Première invocation du checker : NON_EXÉCUTÉ, arguments de README obsolètes
+ayant affiché l’aide avec code retour 0. Le workflow est corrigé pour employer
+les variables attendues et exige désormais un rapport JSON réel.
+
 | Contrôle | Résultat | Preuve |
 |---|---|---|
 | Linter Rust, syntaxe JS/Bash, compilation | RÉUSSI | GitHub Actions `Vérifier le service natif` |
