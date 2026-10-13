@@ -14,6 +14,12 @@ Troisième invocation : NON_EXÉCUTÉ, le runner ne disposait pas du module TOML
 et de l’alias local de l’image appci. La préparation installe le module et
 importe désormais l’image officielle publiée dans le dépôt Incus YunoHost.
 
+Invocation Incus complète suivante : ÉCHEC d’environnement, résolution DNS
+et accès réseau absents dans le conteneur. L’installation a refusé le
+téléchargement des sources ; aucun cycle YunoHost n’est déclaré réussi.
+Le runner autorise désormais explicitement le transfert du réseau incusbr0
+et les scénarios root/subdir sont fixés pour cette application web.
+
 | Contrôle | Résultat | Preuve |
 |---|---|---|
 | Linter Rust, syntaxe JS/Bash, compilation | RÉUSSI | GitHub Actions `Vérifier le service natif` |

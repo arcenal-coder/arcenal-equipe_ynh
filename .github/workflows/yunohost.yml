@@ -17,7 +17,16 @@ jobs:
           sudo incus admin init --minimal
           sudo incus remote add yunohost https://repo.yunohost.org/incus --protocol simplestreams --public
           sudo usermod -a -G incus-admin root
+          sudo sysctl -w net.ipv4.ip_forward=1
+          sudo iptables -I FORWARD -i incusbr0 -j ACCEPT
+          sudo iptables -I FORWARD -o incusbr0 -j ACCEPT
           sudo incus image copy yunohost:yunohost/bookworm-stable/appci local: --alias yunohost-bookworm-stable-appci
+      - name: Vérifier le réseau du conteneur avant les tests
+        run: |
+          sudo incus launch yunohost-bookworm-stable-appci network-probe
+          sleep 10
+          sudo incus exec network-probe -- timeout 30 curl --fail --silent --show-error --proto '=https' https://github.com -o /dev/null
+          sudo incus delete network-probe --force
       - name: Installation, upgrade et sauvegarde/restauration
         run: |
           git clone --depth=1 https://github.com/YunoHost/package_check /tmp/package_check
