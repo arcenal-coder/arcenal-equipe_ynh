@@ -1,0 +1,32 @@
+name: Vérifier le cycle YunoHost
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Préparer Incus isolé
+        run: |
+          sudo systemctl stop docker.service docker.socket || true
+          sudo apt-get update
+          sudo apt-get install -y incus jq lynx btrfs-progs
+          sudo incus admin init --minimal
+          sudo incus remote add yunohost https://repo.yunohost.org/incus --protocol simplestreams --public
+      - name: Installation, upgrade et sauvegarde/restauration
+        run: |
+          git clone --depth=1 https://github.com/YunoHost/package_check /tmp/package_check
+          sudo /tmp/package_check/package_check.sh -a amd64 -d bookworm -y stable "$GITHUB_WORKSPACE"
+      - name: Conserver les preuves
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: yunohost-report
+          path: |
+            /tmp/package_check/Test_results.log
+            /tmp/package_check/Complete.log
+            /tmp/package_check/results
+          if-no-files-found: warn
