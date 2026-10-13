@@ -13,10 +13,11 @@ jobs:
         run: |
           sudo systemctl stop docker.service docker.socket || true
           sudo apt-get update
-          sudo apt-get install -y incus jq lynx btrfs-progs
+          sudo apt-get install -y incus jq lynx btrfs-progs python3-toml
           sudo incus admin init --minimal
           sudo incus remote add yunohost https://repo.yunohost.org/incus --protocol simplestreams --public
           sudo usermod -a -G incus-admin root
+          sudo incus image copy yunohost:yunohost/bookworm-stable/appci local: --alias yunohost-bookworm-stable-appci
       - name: Installation, upgrade et sauvegarde/restauration
         run: |
           git clone --depth=1 https://github.com/YunoHost/package_check /tmp/package_check

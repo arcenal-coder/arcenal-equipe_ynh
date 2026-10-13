@@ -10,6 +10,10 @@ Deuxième invocation : NON_EXÉCUTÉ, préflight ICMP bloqué sur le runner alor
 que HTTPS fonctionne. Le préflight accepte maintenant le téléchargement HTTPS
 vérifié de l’index YunoHost ; aucun scénario de paquet n’est exclu.
 
+Troisième invocation : NON_EXÉCUTÉ, le runner ne disposait pas du module TOML
+et de l’alias local de l’image appci. La préparation installe le module et
+importe désormais l’image officielle publiée dans le dépôt Incus YunoHost.
+
 | Contrôle | Résultat | Preuve |
 |---|---|---|
 | Linter Rust, syntaxe JS/Bash, compilation | RÉUSSI | GitHub Actions `Vérifier le service natif` |
