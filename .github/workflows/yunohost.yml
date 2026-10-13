@@ -16,9 +16,11 @@ jobs:
           sudo apt-get install -y incus jq lynx btrfs-progs
           sudo incus admin init --minimal
           sudo incus remote add yunohost https://repo.yunohost.org/incus --protocol simplestreams --public
+          sudo usermod -a -G incus-admin root
       - name: Installation, upgrade et sauvegarde/restauration
         run: |
           git clone --depth=1 https://github.com/YunoHost/package_check /tmp/package_check
+          python3 tools/prepare_package_check.py /tmp/package_check
           sudo env YNHDEV_BACKEND=incus DIST=bookworm YNH_BRANCH=stable /tmp/package_check/package_check.sh "$GITHUB_WORKSPACE"
           sudo chown -R "$USER:$USER" /tmp/package_check
           python3 tools/verify_package_report.py /tmp/package_check

@@ -6,6 +6,10 @@ Première invocation du checker : NON_EXÉCUTÉ, arguments de README obsolètes
 ayant affiché l’aide avec code retour 0. Le workflow est corrigé pour employer
 les variables attendues et exige désormais un rapport JSON réel.
 
+Deuxième invocation : NON_EXÉCUTÉ, préflight ICMP bloqué sur le runner alors
+que HTTPS fonctionne. Le préflight accepte maintenant le téléchargement HTTPS
+vérifié de l’index YunoHost ; aucun scénario de paquet n’est exclu.
+
 | Contrôle | Résultat | Preuve |
 |---|---|---|
 | Linter Rust, syntaxe JS/Bash, compilation | RÉUSSI | GitHub Actions `Vérifier le service natif` |
