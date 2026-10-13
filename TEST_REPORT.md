@@ -25,6 +25,10 @@ directive `only` non autorisée sur la suite default et une description de
 paquet manquante. La suite par défaut est rétablie sans exclusion ; la détection
 web du script install et la documentation sont corrigées.
 
+Les tests web ont ensuite été arrêtés par l’absence de pycurl sur le host
+du checker. Les cinq dépendances Python déclarées par l’outil amont sont
+désormais disponibles dans l’environnement de vérification isolé.
+
 | Contrôle | Résultat | Preuve |
 |---|---|---|
 | Linter Rust, syntaxe JS/Bash, compilation | RÉUSSI | GitHub Actions `Vérifier le service natif` |
