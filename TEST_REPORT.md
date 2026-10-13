@@ -29,6 +29,10 @@ Les tests web ont ensuite été arrêtés par l’absence de pycurl sur le host
 du checker. Les cinq dépendances Python déclarées par l’outil amont sont
 désormais disponibles dans l’environnement de vérification isolé.
 
+Le checker a ensuite reçu HTTP 401 pour sa connexion SSO de test. Le mot de
+passe des comptes factices du conteneur est aligné sur celui déclaré par
+package_check avant installation ; cela ne concerne aucun compte de production.
+
 | Contrôle | Résultat | Preuve |
 |---|---|---|
 | Linter Rust, syntaxe JS/Bash, compilation | RÉUSSI | GitHub Actions `Vérifier le service natif` |
