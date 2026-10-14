@@ -2,6 +2,9 @@
 
 Statut : candidate native ; réception YunoHost en préparation.
 
+Candidate parallèle actuelle : **0.2.0~ynh2**, binaires **alpha.2** avec correction
+du routage de sous-chemin. Le cycle Incus doit être rejoué sur cette révision.
+
 Première invocation du checker : NON_EXÉCUTÉ, arguments de README obsolètes
 ayant affiché l’aide avec code retour 0. Le workflow est corrigé pour employer
 les variables attendues et exige désormais un rapport JSON réel.
