@@ -7,6 +7,7 @@
 - Chemin proposé : `/equipe`, sur le domaine retenu pendant l’installation.
 - Service, base PostgreSQL et répertoire de données propres au paquet.
 - Source : https://github.com/arcenal-coder/arcenal-equipe_ynh
+- URL figée pour installation : https://github.com/arcenal-coder/arcenal-equipe_ynh/tree/v0.2.0-ynh2
 - Révision vérifiée : `2a75092f96606f4ef969d123615a9384d8084919`.
 - Cycle YunoHost 12.1.41.2 : root, subdir, upgrade, backup/restore et change_url réussis.
 
@@ -17,7 +18,7 @@ avant toute décision de bascule. Les deux applications peuvent coexister.
 ## Parcours client YunoHost
 
 1. Ouvrir **Applications → Installer une application → Installer une application personnalisée**.
-2. Utiliser l’URL GitHub ci-dessus et la branche `main` ou la révision reçue.
+2. Utiliser l’URL figée GitHub ci-dessus pour installer exactement la révision vérifiée.
 3. Choisir le domaine, le chemin `/equipe` et le groupe LDAP autorisé.
 4. Ouvrir ARCenal Équipe depuis le portail YunoHost.
 
