@@ -1,0 +1,46 @@
+name: Qualifier pour le catalogue ARCenal
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  qualifier:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: qualification
+      - uses: actions/checkout@v4
+        with:
+          ref: 2a75092f96606f4ef969d123615a9384d8084919
+          path: candidate
+      - uses: actions/checkout@v4
+        with:
+          repository: YunoHost/package_linter
+          path: linter
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -r linter/requirements.txt
+      - name: Contrôler le paquet avec le linter amont sans modifier ses résultats
+        working-directory: linter
+        run: python package_linter.py ../candidate --json > "$RUNNER_TEMP/linter.json"
+      - name: Télécharger les preuves de cycle de vie et le catalogue réellement distribué
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download 38531575142 --repo arcenal-coder/arcenal-equipe_ynh --name yunohost-report --dir "$RUNNER_TEMP/proof"
+          curl --fail --silent --show-error --proto '=https' https://raw.githubusercontent.com/arcenal-coder/arcenal-systeme-catalogue/main/preview/v3/apps.json -o "$RUNNER_TEMP/catalog.json"
+      - name: Vérifier la qualification ARCenal
+        run: |
+          python qualification/tools/qualify_store.py --report "$RUNNER_TEMP/proof/package_check/results_0.json" --linter "$RUNNER_TEMP/linter.json" --catalog "$RUNNER_TEMP/catalog.json" --output "$RUNNER_TEMP/qualification-arcenal.json"
+          python -B -m unittest discover -s qualification/tests -p test_store_qualification.py -v
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: qualification-arcenal
+          path: |
+            ${{ runner.temp }}/qualification-arcenal.json
+            ${{ runner.temp }}/linter.json
+            ${{ runner.temp }}/proof/package_check/results_0.json
