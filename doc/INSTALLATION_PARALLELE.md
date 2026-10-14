@@ -7,6 +7,8 @@
 - Chemin proposé : `/equipe`, sur le domaine retenu pendant l’installation.
 - Service, base PostgreSQL et répertoire de données propres au paquet.
 - Source : https://github.com/arcenal-coder/arcenal-equipe_ynh
+- Révision vérifiée : `2a75092f96606f4ef969d123615a9384d8084919`.
+- Cycle YunoHost 12.1.41.2 : root, subdir, upgrade, backup/restore et change_url réussis.
 
 L’installation n’importe pas de données automatiquement et n’écrit pas dans
 l’application actuelle. La reprise initiale se fait après installation et

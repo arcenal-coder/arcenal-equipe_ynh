@@ -1,9 +1,12 @@
 # Rapport de vérification — ARCenal Équipe 0.2
 
-Statut : candidate native ; réception YunoHost en préparation.
+Statut : **candidate d’installation parallèle 0.2.0~ynh2 vérifiée sur YunoHost 12.1.41.2** ; réception métier avec le client à effectuer.
 
 Candidate parallèle actuelle : **0.2.0~ynh2**, binaires **alpha.2** avec correction
-du routage de sous-chemin. Le cycle Incus doit être rejoué sur cette révision.
+du routage de sous-chemin. Révision testée : `2a75092f96606f4ef969d123615a9384d8084919`.
+Preuve : https://github.com/arcenal-coder/arcenal-equipe_ynh/actions/runs/38531575142
+Les six scénarios du rapport package_check sont réussis ; le classement global
+de l’outil reste à 0 (indicateur distinct, avec trois avertissements de linter).
 
 Première invocation du checker : NON_EXÉCUTÉ, arguments de README obsolètes
 ayant affiché l’aide avec code retour 0. Le workflow est corrigé pour employer
@@ -52,11 +55,12 @@ depuis le miroir SPDX GitHub avec délais et retries bornés.
 | Transactions PostgreSQL, confirmations, rejeu, conflit et audit UID LDAP | RÉUSSI | PostgreSQL 15 réel dans GitHub Actions |
 | Construction Linux amd64 et arm64 | RÉUSSI | Artifacts des deux architectures |
 | Secret scanning avant commit | RÉUSSI | Hook gitleaks, aucun secret détecté |
-| Installation YunoHost | NON_EXÉCUTÉ | Workflow Incus à lancer après sources Linux figées |
-| Retrait/réinstallation YunoHost | NON_EXÉCUTÉ | Même workflow |
-| Upgrade YunoHost | NON_EXÉCUTÉ | Même workflow |
-| Backup/restore données et configuration | NON_EXÉCUTÉ | Même workflow |
-| Permissions SSO, prénom LDAP, accès web réel | NON_EXÉCUTÉ | Recette du paquet dans Incus |
+| Installation YunoHost root et subdir | RÉUSSI | package_check, run 38531575142 |
+| Retrait/réinstallation YunoHost | RÉUSSI | Cycle d’installation du checker |
+| Upgrade YunoHost | RÉUSSI | package_check, run 38531575142 |
+| Backup/restore du paquet et configuration | RÉUSSI | package_check, run 38531575142 ; données métier de production non migrées |
+| Accès web SSO de test et ressources | RÉUSSI | curl_tests du paquet dans Incus ; recette LDAP client à effectuer |
+| Changement d’URL | RÉUSSI | package_check, run 38531575142 |
 | Reprise complète des CV et bascule depuis l’ancienne application | NON_EXÉCUTÉ | Métadonnées importables, pièces jointes à reprendre |
 | Conversation réelle et boucle MCP Hermes | ÉCHEC | Trois essais sur l’instance fournie : délai/503 ; transport textuel natif et façades présents, boucle complète non reçue |
 | Domaines Victoire et Andréa | NON_EXÉCUTÉ | Après réception du recrutement natif, suivant le cadrage |
