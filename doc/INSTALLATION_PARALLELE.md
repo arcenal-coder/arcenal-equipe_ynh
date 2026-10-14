@@ -28,13 +28,13 @@ La version 0.2.0~ynh2 est publiée dans le catalogue **Prévisualisation**.
 
 1. Dans la configuration d’ARCenal Store, choisir **Prévisualisation**, puis
    **Actualiser le catalogue**.
-2. Dans **Applications → Installer une application**, sélectionner **Toutes
-   les applications** pour le filtre de qualité et rechercher **ARCenal Équipe**.
+2. Dans **Applications → Installer une application**, rechercher **ARCenal Équipe**.
 3. Installer dans un chemin distinct, par exemple `/equipe`.
 
-La candidate conserve son niveau package_check réel 0, même si les six scénarios
-du cycle de vie sont réussis. Le filtre YunoHost de qualité convenable la masque
-par défaut ; aucun niveau artificiel 8 ne lui est attribué.
+La qualification technique du catalogue ARCenal est **5**. Elle est calculée
+sur les tests du paquet et son enregistrement dans le catalogue réellement
+utilisé. La note du catalogue communautaire officiel reste distincte et est
+conservée dans `QUALIFICATION_ARCENAL.json`. Ce n’est pas une certification officielle.
 
 ## Recette commune avant bascule
 

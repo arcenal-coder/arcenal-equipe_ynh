@@ -11,7 +11,8 @@ canaux = ["development", "preview"]
 version = "0.2.0~ynh2"
 minimum_yunohost = ">= 12.1.17"
 architectures = ["amd64", "arm64"]
-niveau = 0
+niveau = 5
+preuve_qualification = "https://github.com/arcenal-coder/arcenal-equipe_ynh/actions/runs/38543953375"
 multi_instance = false
 ldap = true
 sso = true

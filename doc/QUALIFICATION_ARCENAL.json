@@ -1,0 +1,20 @@
+{
+  "scope": "ARCenal Store, catalogue preview administré",
+  "app": "arcenal_equipe",
+  "version": "0.2.0~ynh2",
+  "revision": "2a75092f96606f4ef969d123615a9384d8084919",
+  "technical_level": 5,
+  "upstream_official_level": 0,
+  "official_catalog_findings": [
+    "AppCatalog.is_in_catalog",
+    "AppCatalog.state_is_working"
+  ],
+  "runtime_checks": "all_required_passed",
+  "warnings": [
+    "App.badges_in_readme",
+    "App.helper_consistency_service_add",
+    "AppCatalog.has_category"
+  ],
+  "official_certification": false,
+  "proof_url": "https://github.com/arcenal-coder/arcenal-equipe_ynh/actions/runs/38543953375"
+}

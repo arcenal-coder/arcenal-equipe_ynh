@@ -8,6 +8,24 @@ Preuve : https://github.com/arcenal-coder/arcenal-equipe_ynh/actions/runs/385315
 Les six scénarios du rapport package_check sont réussis ; le classement global
 de l’outil reste à 0 (indicateur distinct, avec trois avertissements de linter).
 
+## Qualification du catalogue cible corrigée
+
+Le niveau 0 amont provenait de l’absence du paquet dans le catalogue communautaire
+officiel, distinct du catalogue tiers ARCenal qui distribue ce paquet. Le workflow
+`Qualifier pour le catalogue ARCenal` vérifie les six scénarios, refuse toute
+erreur technique et compare la version/révision à l’entrée effectivement publiée
+dans ARCenal Store. Résultat : **qualification technique ARCenal 5**, preuve
+https://github.com/arcenal-coder/arcenal-equipe_ynh/actions/runs/38543953375.
+
+Le résultat officiel brut n’est pas réécrit. Seules les deux constatations
+strictement liées au catalogue officiel sont vérifiées contre le catalogue cible ;
+aucune erreur de code, permission, sauvegarde ou restauration ne peut être ignorée.
+
+Régression d’affichage sur le client : catalogue API niveau 5/état working,
+carte visible avec le filtre normal « qualité satisfaisante », fiche ouverte
+dans Chrome sans le libellé cassée. L’actualisation n’a concerné que l’index
+des applications, sans installation ou mise à jour d’une application.
+
 Première invocation du checker : NON_EXÉCUTÉ, arguments de README obsolètes
 ayant affiché l’aide avec code retour 0. Le workflow est corrigé pour employer
 les variables attendues et exige désormais un rapport JSON réel.
