@@ -1,5 +1,6 @@
 use arcenal_equipe::native::{
     auth::User,
+    mcp_tokens,
     repository::{self, Mutation},
 };
 use serde_json::json;
@@ -20,7 +21,7 @@ async fn native_storage_confirmation_conflict_and_audit() {
         .execute(&pool)
         .await
         .unwrap();
-    sqlx::raw_sql("TRUNCATE equipe_records,equipe_audit,equipe_confirmations,equipe_imports,equipe_files,equipe_settings").execute(&pool).await.unwrap();
+    sqlx::raw_sql("TRUNCATE equipe_records,equipe_audit,equipe_confirmations,equipe_imports,equipe_files,equipe_settings,equipe_mcp_tokens").execute(&pool).await.unwrap();
     let user = User {
         uid: "test.alice".into(),
         name: "Alice".into(),
@@ -123,5 +124,94 @@ async fn native_storage_confirmation_conflict_and_audit() {
         repository::mutate(&pool, &ordinary, settings)
             .await
             .is_err()
+    );
+    // MCP credentials belong to the authenticated LDAP user, not an argument
+    // chosen by Hermes. Only hashes are persisted or returned by the listing.
+    assert!(
+        mcp_tokens::issue(&pool, &ordinary, "elise", "  ")
+            .await
+            .is_err()
+    );
+    let no_access = User {
+        admin: false,
+        permission: false,
+        ..user.clone()
+    };
+    assert!(
+        mcp_tokens::issue(&pool, &no_access, "elise", "Hermes")
+            .await
+            .is_err()
+    );
+    let connection = mcp_tokens::issue(&pool, &ordinary, "elise", "Hermes test")
+        .await
+        .unwrap();
+    let token = connection["token"].as_str().unwrap();
+    let token_id = connection["id"].as_str().unwrap();
+    assert_eq!(
+        mcp_tokens::owner(&pool, token, "elise").await.unwrap(),
+        ordinary.uid
+    );
+    assert!(mcp_tokens::owner(&pool, token, "victoire").await.is_err());
+    let listed = mcp_tokens::list(&pool, &ordinary.uid, "elise")
+        .await
+        .unwrap();
+    assert_eq!(listed["connections"].as_array().unwrap().len(), 1);
+    assert!(!listed.to_string().contains(token));
+    assert!(listed["connections"][0].get("token_hash").is_none());
+    assert_eq!(
+        mcp_tokens::list(&pool, "other.ldap", "elise")
+            .await
+            .unwrap()["connections"],
+        json!([])
+    );
+    assert!(
+        mcp_tokens::revoke(&pool, "other.ldap", "elise", token_id)
+            .await
+            .is_err()
+    );
+    assert!(
+        mcp_tokens::revoke(&pool, &ordinary.uid, "victoire", token_id)
+            .await
+            .is_err()
+    );
+    assert!(mcp_tokens::owner(&pool, token, "elise").await.is_ok());
+    mcp_tokens::revoke(&pool, &ordinary.uid, "elise", token_id)
+        .await
+        .unwrap();
+    assert!(mcp_tokens::owner(&pool, token, "elise").await.is_err());
+    let expired = mcp_tokens::issue(&pool, &ordinary, "elise", "Expired test")
+        .await
+        .unwrap();
+    sqlx::query(
+        "UPDATE equipe_mcp_tokens SET expires_at=now()-interval '1 second' WHERE id=$1::text::uuid",
+    )
+    .bind(expired["id"].as_str().unwrap())
+    .execute(&pool)
+    .await
+    .unwrap();
+    assert!(
+        mcp_tokens::owner(&pool, expired["token"].as_str().unwrap(), "elise")
+            .await
+            .is_err()
+    );
+    let stored: String =
+        sqlx::query_scalar("SELECT token_hash FROM equipe_mcp_tokens WHERE id=$1::text::uuid")
+            .bind(token_id)
+            .fetch_one(&pool)
+            .await
+            .unwrap();
+    assert_eq!(stored.len(), 64);
+    assert_ne!(stored, token);
+    let token_audit: Vec<(String, String, String)> = sqlx::query_as(
+        "SELECT author_uid,action,details FROM equipe_audit WHERE action LIKE 'mcp-token-%'",
+    )
+    .fetch_all(&pool)
+    .await
+    .unwrap();
+    assert_eq!(token_audit.len(), 3);
+    assert!(
+        token_audit
+            .iter()
+            .all(|(uid, _, details)| uid == &ordinary.uid && !details.contains(token))
     );
 }

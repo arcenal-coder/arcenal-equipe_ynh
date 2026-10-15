@@ -3,7 +3,7 @@
 ## Version native 0.2 — livraison en préparation
 
 La commande de production est `arcenal-equipe serve` : un service Rust/Axum,
-une base PostgreSQL, authentification exclusivement par le proxy SSO YunoHost
+une base PostgreSQL, sessions utilisateur via le proxy SSO YunoHost
 et lecture du prénom dans LDAP. Aucun compte ni mot de passe applicatif.
 
 **Dépôt de livraison :** https://github.com/arcenal-coder/arcenal-equipe_ynh
@@ -19,8 +19,12 @@ préserve les identifiants et les dates source et demande une confirmation de
 la nouvelle destination publique. Les pièces jointes se reprennent séparément.
 La bascule et la suppression de l’application précédente restent soumises à réception.
 
-Les façades MCP vérifient un contexte signé par ARCenal, son expiration, son
-agent et l’utilisateur LDAP avant chaque action. Aucun auteur libre n’est accepté.
+Les serveurs MCP sont ajoutables dans Hermes avec une URL HTTP et un jeton
+Bearer créé depuis **Élise → Connexion MCP**. Le jeton est rattaché au propriétaire
+LDAP et à l’agent, valable 90 jours et révocable dans l’application ; seule son
+empreinte est conservée. Les droits LDAP sont revérifiés à chaque requête.
+Aucun auteur libre ni argument propriétaire `_arc_context` n’est accepté.
+Voir [la procédure de connexion Hermes](doc/CONNEXION_HERMES.md).
 Les pages privées exigent l’en-tête SSO du proxy attendu et un secret de proxy
 injecté côté Nginx ; ce secret ne paraît jamais dans le navigateur.
 
@@ -29,7 +33,8 @@ Linux et essais PostgreSQL/YunoHost en cours de préparation sur GitHub. Aucune
 installation YunoHost ni promotion Store n’est déclarée réussie à ce stade.
 Victoire et Andréa restent visibles mais leurs domaines complets viennent après
 la réception du recrutement natif. La conversation utilise pour l’instant une
-complétion textuelle Hermes ; le dialogue avec boucle MCP native reste à recevoir.
+complétion textuelle Hermes. Les outils MCP s’utilisent depuis le client Hermes ;
+la nouvelle connexion Bearer reste à vérifier sur une candidate déployée.
 
 Les sections suivantes documentent le pilote de développement antérieur.
 

@@ -7,6 +7,27 @@
   const candidateFields=[["first_name","Prénom"],["last_name","Nom"],["email","E-mail"],["phone","Téléphone"],["position","Poste"],["location","Localisation"],["experience","Expérience"],["mobility","Mobilité"],["salary_expectation","Attente salariale"],["tags","Compétences / tags"],["notes","Notes"],["motivation","Motivation"]];
   const jobFields=[["title","Intitulé"],["location","Lieu"],["contract","Contrat"],["salary_min","Salaire minimum annuel"],["salary_max","Salaire maximum annuel"],["description","Résumé"],["context","Contexte"],["objective","Objectif"],["missions","Missions"],["skills","Compétences"],["dolibarr_ref","Affaire Dolibarr"]];
   function node(tag,text){const n=document.createElement(tag);if(text!==undefined)n.textContent=text;return n;}
+  const mcpStatus=document.getElementById("mcp-connection-status");
+  const credential=document.getElementById("mcp-new-credential");
+  const bearerToken=document.getElementById("mcp-bearer-token");
+  let newConnectionId=null;
+  function hideCredential(){bearerToken.value="";credential.hidden=true;newConnectionId=null;}
+  async function mcpRequest(path,method="GET",body){
+    const response=await fetch(base+"/api/mcp/elise/connections"+path,{method,headers:{"Content-Type":"application/json","X-ARCenal-Request":"native"},body:body===undefined?undefined:JSON.stringify(body),signal:AbortSignal.timeout(15000)});
+    const data=await response.json();if(!response.ok||data.error)throw new Error(data.error||`HTTP ${response.status}`);return data;
+  }
+  async function loadMcp(){
+    try{const data=await mcpRequest("");const target=document.getElementById("mcp-connections");target.replaceChildren();
+      for(const connection of data.connections){const row=node("article");row.className="data-item";const expired=new Date(connection.expires_at)<=new Date();const revoked=Boolean(connection.revoked_at);row.append(node("h4",connection.label),node("p",revoked?"Révoquée":`${expired?"Expirée le":"Expire le"} ${new Date(connection.expires_at).toLocaleDateString("fr")}`));
+        if(!revoked&&!expired){const button=node("button","Révoquer cette connexion");button.type="button";button.addEventListener("click",async()=>{if(!confirm(`Révoquer la connexion « ${connection.label} » ? Hermes ne pourra plus utiliser ce jeton.`))return;button.disabled=true;try{await mcpRequest("/"+encodeURIComponent(connection.id),"DELETE");if(newConnectionId===connection.id)hideCredential();mcpStatus.textContent="Connexion révoquée.";await loadMcp();}catch(error){mcpStatus.textContent=error.message;button.disabled=false;}});row.append(button);}target.append(row);
+      }if(!data.connections.length)target.append(node("p","Aucune connexion. Créez un jeton pour ajouter ce MCP dans Hermes."));
+    }catch(error){mcpStatus.textContent=error.message;}
+  }
+  document.getElementById("mcp-connection-form").addEventListener("submit",async event=>{event.preventDefault();const button=event.currentTarget.querySelector("button");button.disabled=true;hideCredential();try{const data=await mcpRequest("","POST",{label:document.getElementById("mcp-connection-label").value});bearerToken.value=data.token;newConnectionId=data.id;credential.hidden=false;mcpStatus.textContent="Jeton créé. Copiez-le dans le champ Bearer token de Hermes.";await loadMcp();}catch(error){mcpStatus.textContent=error.message;}finally{button.disabled=false;}});
+  document.getElementById("mcp-credential-hide").addEventListener("click",hideCredential);
+  window.addEventListener("pagehide",hideCredential);
+  document.querySelector('[data-recruitment-tab="mcp"]').addEventListener("click",loadMcp);
+  if(location.hash==="#mcp")loadMcp();
   async function request(path,body){const response=await fetch(base+path,{method:"POST",headers:{"Content-Type":"application/json","X-ARCenal-Request":"native"},body:JSON.stringify(body),signal:AbortSignal.timeout(60000)});const data=await response.json();if(!response.ok||data.error)throw new Error(data.error||`HTTP ${response.status}`);return data;}
   async function save(mutation,critical){
     if(critical){const preview=await request("/api/prepare",mutation);if(!confirm(`Confirmer ${mutation.action} ?\nDestination : ${preview.destination}\nCible : ${preview.title||preview.target||"nouvelle offre"}\nContenu :\n${JSON.stringify(preview.content,null,2)}`))return false;mutation.confirmation=preview.confirmation;}

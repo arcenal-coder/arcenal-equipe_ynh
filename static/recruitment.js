@@ -141,8 +141,8 @@
       if (button.dataset.recruitmentTab === view) button.setAttribute("aria-current","page"); else button.removeAttribute("aria-current");
     }
     for (const panel of document.querySelectorAll("[data-recruitment-view]")) panel.hidden = panel.dataset.recruitmentView !== view;
-    container.hidden = view === "conversation";
-    history.replaceState(null,"",`#${view}`); document.title = `${({candidates:"Candidatures",pool:"Vivier",jobs:"Offres",settings:"Réglages",activity:"Activité",conversation:"Conversation"})[view]} · Élise · ARCenal`;
+    container.hidden = view === "conversation" || view === "mcp";
+    history.replaceState(null,"",`#${view}`); document.title = `${({candidates:"Candidatures",pool:"Vivier",jobs:"Offres",settings:"Réglages",activity:"Activité",conversation:"Conversation",mcp:"Connexion MCP"})[view]} · Élise · ARCenal`;
   }
   async function load() {
     refresh.disabled = true; status.textContent = "Chargement des données réelles du recrutement ONYX…";
@@ -162,6 +162,6 @@
   for (const id of ["candidate-search","candidate-position","pool-search","pool-position","job-search","show-archived-jobs"]) document.getElementById(id).addEventListener("input",render);
   refresh.addEventListener("click",load); document.getElementById("detail-close").addEventListener("click",()=>detail.close());
   document.addEventListener("native-saved",load);
-  const view = location.hash.slice(1); select(["candidates","pool","jobs","settings","activity","conversation"].includes(view) ? view : "candidates");
+  const view = location.hash.slice(1); select((["candidates","pool","jobs","settings","activity","conversation"].includes(view) || (native && view === "mcp")) ? view : "candidates");
   document.title = document.title || originalTitle; load();
 })();

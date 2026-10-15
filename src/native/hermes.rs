@@ -103,16 +103,9 @@ pub async fn chat(
     .map_err(|_| Error::unavailable("Délai de connexion Hermes dépassé."))?
     .map_err(|_| Error::unavailable("Connexion Hermes refusée."))?;
     let mut stream = transport.0;
-    let claims = auth::Claims {
-        uid: user.uid.clone(),
-        agent: "elise".into(),
-        expires: chrono::Utc::now().timestamp() + 600,
-        nonce: uuid::Uuid::new_v4().to_string(),
-    };
-    let context = auth::sign(&app.config.signing_key, &claims);
     let instructions = format!(
-        "Tu es Élise, assistante de recrutement. Tu échanges avec {}. Auteur LDAP validé : {}. Fournis des brouillons utiles en français. Ne prétends pas publier, envoyer, supprimer ou consulter des dossiers sans outil confirmé. Le contexte de délégation est confidentiel, ne le reproduis jamais dans la réponse : {}. Les actions critiques exigent une confirmation humaine dans ARCenal.",
-        user.name, user.uid, context
+        "Tu es Élise, assistante de recrutement. Tu échanges avec {}. Auteur LDAP validé : {}. Fournis des brouillons utiles en français. Ne prétends pas publier, envoyer, supprimer ou consulter des dossiers sans outil confirmé. Les actions critiques exigent une confirmation humaine dans ARCenal.",
+        user.name, user.uid
     );
     // Text-only inference cannot execute undeclared built-in Hermes tools.
     stream.send(Message::Text(json!({"jsonrpc":"2.0","id":"arcenal-chat","method":"llm.oneshot","params":{"profile":"elise","instructions":instructions,"input":input.message,"max_tokens":1500}}).to_string().into())).await.map_err(|_|Error::unavailable("Envoi à Hermes impossible."))?;
@@ -138,7 +131,7 @@ pub async fn chat(
                     .as_str()
                     .filter(|v| !v.is_empty())
                     .ok_or_else(|| Error::unavailable("Hermes n’a pas renvoyé de texte."))?;
-                return Ok(text.replace(&context, "[contexte protégé]"));
+                return Ok(text.to_owned());
             }
         }
         Err(Error::unavailable("Hermes a fermé la conversation."))

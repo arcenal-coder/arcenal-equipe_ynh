@@ -60,6 +60,7 @@ show_tile = false
 url = "/mcp"
 allowed = "visitors"
 show_tile = false
+auth_header = false
 
 [resources.apt]
 packages = "postgresql"

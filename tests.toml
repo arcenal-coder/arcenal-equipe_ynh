@@ -16,6 +16,10 @@ yunohost user update ciadmin --change-password SuperSecretCIPassw0rd
     elise.logged_on_sso = true
     elise.expect_content = "Pipeline candidats"
 
+    mcp_connection.path = "/agents/elise"
+    mcp_connection.logged_on_sso = true
+    mcp_connection.expect_content = "Créer un jeton pour Hermes"
+
     recruitment.path = "/recrutement"
     recruitment.expect_content = "Nos offres d’emploi"
 

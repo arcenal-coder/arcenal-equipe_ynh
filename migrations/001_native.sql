@@ -45,3 +45,13 @@ CREATE TABLE IF NOT EXISTS equipe_files (
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS equipe_records_status ON equipe_records(kind,(data->>'status'));
+CREATE TABLE IF NOT EXISTS equipe_mcp_tokens (
+    id UUID PRIMARY KEY,
+    token_hash TEXT NOT NULL UNIQUE,
+    author_uid TEXT NOT NULL,
+    agent TEXT NOT NULL CHECK (agent IN ('elise','victoire','andrea')),
+    label TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    expires_at TIMESTAMPTZ NOT NULL,
+    revoked_at TIMESTAMPTZ
+);

@@ -5,7 +5,7 @@ on:
       tag:
         description: Version de candidate publique
         required: true
-        default: v0.2.0-alpha.1
+        default: v0.2.0-alpha.3
 permissions:
   contents: write
 jobs:

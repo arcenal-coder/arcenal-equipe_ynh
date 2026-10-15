@@ -1,6 +1,7 @@
 pub mod auth;
 mod hermes;
 mod mcp;
+pub mod mcp_tokens;
 pub mod repository;
 use axum::{
     Json, Router,
@@ -140,6 +141,14 @@ pub async fn run() -> Result<(), Box<dyn std::error::Error>> {
         .route("/api/hermes/status", get(hermes::status))
         .route("/api/chat/elise", post(hermes::chat))
         .route("/mcp/{agent}", post(mcp::call))
+        .route(
+            "/api/mcp/{agent}/connections",
+            get(mcp_tokens::connections).post(mcp_tokens::create),
+        )
+        .route(
+            "/api/mcp/{agent}/connections/{id}",
+            axum::routing::delete(mcp_tokens::remove),
+        )
         .route("/recrutement", get(public_recruitment))
         .route("/api/public/jobs", get(public_jobs))
         .route("/profiles/{name}", get(profile))
@@ -255,6 +264,7 @@ async fn agent_page(
         &app,
         &user,
         include_str!("../../templates/native_elise.html")
+            .replace("{{origin}}", &crate::html(&app.config.origin))
             .replace("{{base}}", &crate::html(&app.config.base))
             .replace("{{user}}", &crate::html(&user.name)),
     )))

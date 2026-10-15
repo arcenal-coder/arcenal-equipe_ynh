@@ -1,6 +1,20 @@
 name: Qualifier pour le catalogue ARCenal
 on:
   workflow_dispatch:
+    inputs:
+      candidate_ref:
+        description: Révision exacte du paquet à qualifier
+        required: true
+        default: 2a75092f96606f4ef969d123615a9384d8084919
+      lifecycle_run:
+        description: Run réussi du cycle YunoHost pour cette révision
+        required: true
+        default: "38531575142"
+      catalog_channel:
+        description: Canal du catalogue contenant cette révision
+        type: choice
+        options: [development, preview]
+        default: preview
 permissions:
   contents: read
   actions: read
@@ -13,7 +27,7 @@ jobs:
           path: qualification
       - uses: actions/checkout@v4
         with:
-          ref: 2a75092f96606f4ef969d123615a9384d8084919
+          ref: ${{ inputs.candidate_ref }}
           path: candidate
       - uses: actions/checkout@v4
         with:
@@ -29,11 +43,24 @@ jobs:
       - name: Télécharger les preuves de cycle de vie et le catalogue réellement distribué
         env:
           GH_TOKEN: ${{ github.token }}
+          LIFECYCLE_RUN: ${{ inputs.lifecycle_run }}
+          CATALOG_CHANNEL: ${{ inputs.catalog_channel }}
         run: |
-          gh run download 38531575142 --repo arcenal-coder/arcenal-equipe_ynh --name yunohost-report --dir "$RUNNER_TEMP/proof"
-          curl --fail --silent --show-error --proto '=https' https://raw.githubusercontent.com/arcenal-coder/arcenal-systeme-catalogue/main/preview/v3/apps.json -o "$RUNNER_TEMP/catalog.json"
+          [[ "$LIFECYCLE_RUN" =~ ^[0-9]+$ ]]
+          [[ "$CATALOG_CHANNEL" == development || "$CATALOG_CHANNEL" == preview ]]
+          gh run download "$LIFECYCLE_RUN" --repo arcenal-coder/arcenal-equipe_ynh --name yunohost-report --dir "$RUNNER_TEMP/proof"
+          curl --fail --silent --show-error --proto '=https' "https://raw.githubusercontent.com/arcenal-coder/arcenal-systeme-catalogue/main/$CATALOG_CHANNEL/v3/apps.json" -o "$RUNNER_TEMP/catalog.json"
       - name: Vérifier la qualification ARCenal
         run: |
+          python - <<'PY'
+          import json, os, subprocess, tomllib
+          from pathlib import Path
+          report = json.loads((Path(os.environ["RUNNER_TEMP"]) / "proof/package_check/results_0.json").read_text())
+          revision = subprocess.check_output(["git", "-C", "candidate", "rev-parse", "HEAD"], text=True).strip()
+          manifest = tomllib.loads(Path("candidate/manifest.toml").read_text())
+          if report.get("commit") != revision or report.get("app_version") != manifest["version"]:
+              raise SystemExit("Preuves refusées : révision ou version différente du paquet inspecté.")
+          PY
           python qualification/tools/qualify_store.py --report "$RUNNER_TEMP/proof/package_check/results_0.json" --linter "$RUNNER_TEMP/linter.json" --catalog "$RUNNER_TEMP/catalog.json" --output "$RUNNER_TEMP/qualification-arcenal.json"
           python -B -m unittest discover -s qualification/tests -p test_store_qualification.py -v
       - uses: actions/upload-artifact@v4
