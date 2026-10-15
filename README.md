@@ -28,9 +28,10 @@ Voir [la procédure de connexion Hermes](doc/CONNEXION_HERMES.md).
 Les pages privées exigent l’en-tête SSO du proxy attendu et un secret de proxy
 injecté côté Nginx ; ce secret ne paraît jamais dans le navigateur.
 
-**Statut :** service compilé et contrôles unitaires locaux exécutés ; construction
-Linux et essais PostgreSQL/YunoHost en cours de préparation sur GitHub. Aucune
-installation YunoHost ni promotion Store n’est déclarée réussie à ce stade.
+**Statut :** MCP standard compilé et testé localement et en CI avec PostgreSQL
+réel ; binaires alpha.3 publiés pour amd64/arm64. Le paquet 0.2.0~ynh3 est en
+vérification YunoHost avant diffusion preview. La candidate précédente
+0.2.0~ynh2 reste la version distribuée tant que cette vérification n’est pas reçue.
 Victoire et Andréa restent visibles mais leurs domaines complets viennent après
 la réception du recrutement natif. La conversation utilise pour l’instant une
 complétion textuelle Hermes. Les outils MCP s’utilisent depuis le client Hermes ;

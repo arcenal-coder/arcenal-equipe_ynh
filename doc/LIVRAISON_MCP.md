@@ -1,6 +1,7 @@
 # Livraison MCP — préparation de 0.2.0~ynh3
 
-Statut : correctif local vérifié, publication et déploiement non effectués.
+Statut : sources et binaires publiés ; paquet 0.2.0~ynh3 en vérification,
+diffusion preview et déploiement non effectués.
 
 ## Version et publication proposées
 
@@ -9,9 +10,13 @@ Statut : correctif local vérifié, publication et déploiement non effectués.
 - Paquet : `0.2.0~ynh3`, tag figé proposé `v0.2.0-ynh3`.
 - Distribution : development puis preview après les contrôles applicables.
 
-Le manifeste conserve les sources de la candidate précédente tant que les
-nouveaux binaires ne sont pas publiés. Ne pas annoncer le nouveau paquet
-installable avant remplacement de ses URL et SHA-256 par les valeurs réelles.
+Le manifeste référence les binaires alpha.3 et leurs SHA-256 publiés.
+La publication preview reste conditionnée au cycle YunoHost de ce paquet.
+
+- Révision source : `7f0d38c0b296333e1626320471ca243679eecb4a`.
+- CI native, avec PostgreSQL 15 réel : [38757866925](https://github.com/arcenal-coder/arcenal-equipe_ynh/actions/runs/38757866925), réussie.
+- Construction Linux : [38757877929](https://github.com/arcenal-coder/arcenal-equipe_ynh/actions/runs/38757877929), réussie sur amd64/arm64.
+- Binaires : [v0.2.0-alpha.3](https://github.com/arcenal-coder/arcenal-equipe_ynh/releases/tag/v0.2.0-alpha.3).
 
 ## Contenu
 

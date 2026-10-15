@@ -4,7 +4,7 @@ id = "arcenal_equipe"
 name = "ARCenal Équipe"
 description.fr = "Trois assistants métier reliés à Hermes : recrutement, documents et communication"
 description.en = "Three business assistants connected to Hermes for recruitment, documents and communication"
-version = "0.2.0~ynh2"
+version = "0.2.0~ynh3"
 maintainers = ["ARCenal"]
 
 [upstream]
@@ -35,10 +35,10 @@ default = "all_users"
 
 [resources.sources.main]
 in_subdir = false
-amd64.url = "https://github.com/arcenal-coder/arcenal-equipe_ynh/releases/download/v0.2.0-alpha.2/arcenal-equipe-linux-amd64.tar.gz"
-amd64.sha256 = "874c75c868f748e7d1fc562a798cde002ac25fd596c4d08aefe99ec196a9c7fa"
-arm64.url = "https://github.com/arcenal-coder/arcenal-equipe_ynh/releases/download/v0.2.0-alpha.2/arcenal-equipe-linux-arm64.tar.gz"
-arm64.sha256 = "193e6e6fb65a5cadd62eb42c8a5abbdb876eef16fc263699f923ee49f2b04e4a"
+amd64.url = "https://github.com/arcenal-coder/arcenal-equipe_ynh/releases/download/v0.2.0-alpha.3/arcenal-equipe-linux-amd64.tar.gz"
+amd64.sha256 = "60d393965144b9c5b5e74c423faa17fe8aa7702dc6a283d6af3fa77d99ace48d"
+arm64.url = "https://github.com/arcenal-coder/arcenal-equipe_ynh/releases/download/v0.2.0-alpha.3/arcenal-equipe-linux-arm64.tar.gz"
+arm64.sha256 = "c6c170cc15a75494fb6770dd0389829bf8a9aea161a5c08a2ffdb4585a8362da"
 
 [resources.system_user]
 
