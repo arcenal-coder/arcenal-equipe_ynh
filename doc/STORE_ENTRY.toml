@@ -1,18 +1,18 @@
-# Candidate publiée en preview dans arcenal-systeme-catalogue (PR #8).
-# Promotion sélective réussie : run 38535760416 ; publication : run 38535805050.
+# Candidate MCP publiée en preview dans arcenal-systeme-catalogue (PR #14 et #15).
+# Promotion sélective : run 38761047294 ; publication : run 38761079416.
 [[applications.arcenal]]
 id = "arcenal_equipe"
 nom = "ARCenal Équipe"
 description_fr = "Recrutement natif et assistants métier, candidate d’installation parallèle."
 depot = "https://github.com/arcenal-coder/arcenal-equipe_ynh"
 branche = "main"
-revision = "2a75092f96606f4ef969d123615a9384d8084919"
+revision = "09bc15c42a193463856a937975f1f5a48d13fb6b"
 canaux = ["development", "preview"]
-version = "0.2.0~ynh2"
+version = "0.2.0~ynh3"
 minimum_yunohost = ">= 12.1.17"
 architectures = ["amd64", "arm64"]
 niveau = 5
-preuve_qualification = "https://github.com/arcenal-coder/arcenal-equipe_ynh/actions/runs/38543953375"
+preuve_qualification = "https://github.com/arcenal-coder/arcenal-equipe_ynh/actions/runs/38760615395"
 multi_instance = false
 ldap = true
 sso = true

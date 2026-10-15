@@ -1,22 +1,28 @@
-# Livraison MCP — préparation de 0.2.0~ynh3
+# Livraison MCP — 0.2.0~ynh3
 
-Statut : sources et binaires publiés ; paquet 0.2.0~ynh3 en vérification,
-diffusion preview et déploiement non effectués.
+Statut : sources, binaires et paquet vérifié publiés en preview.
+Mise à jour et recette Hermes sur l’installation client à effectuer.
 
-## Version et publication proposées
+## Version et publication
 
-- Commit fonctionnel : `feat: expose standard MCP connections for Hermes`.
+- Commit fonctionnel : `7f0d38c` — `feat: expose standard MCP connections for Hermes`.
 - Binaires Linux : prérelease `v0.2.0-alpha.3`, amd64 et arm64.
-- Paquet : `0.2.0~ynh3`, tag figé proposé `v0.2.0-ynh3`.
+- Paquet : `0.2.0~ynh3`, tag figé `v0.2.0-ynh3`.
 - Distribution : development puis preview après les contrôles applicables.
 
 Le manifeste référence les binaires alpha.3 et leurs SHA-256 publiés.
-La publication preview reste conditionnée au cycle YunoHost de ce paquet.
+Le cycle YunoHost et la qualification de cette révision ont réussi avant promotion.
 
 - Révision source : `7f0d38c0b296333e1626320471ca243679eecb4a`.
 - CI native, avec PostgreSQL 15 réel : [38757866925](https://github.com/arcenal-coder/arcenal-equipe_ynh/actions/runs/38757866925), réussie.
 - Construction Linux : [38757877929](https://github.com/arcenal-coder/arcenal-equipe_ynh/actions/runs/38757877929), réussie sur amd64/arm64.
 - Binaires : [v0.2.0-alpha.3](https://github.com/arcenal-coder/arcenal-equipe_ynh/releases/tag/v0.2.0-alpha.3).
+- Paquet : [v0.2.0-ynh3](https://github.com/arcenal-coder/arcenal-equipe_ynh/releases/tag/v0.2.0-ynh3), révision `09bc15c42a193463856a937975f1f5a48d13fb6b`.
+- Cycle YunoHost 12.1.41.2 : [38758390074](https://github.com/arcenal-coder/arcenal-equipe_ynh/actions/runs/38758390074), six scénarios réussis.
+- Qualification ARCenal 5 : [38760615395](https://github.com/arcenal-coder/arcenal-equipe_ynh/actions/runs/38760615395), résultat officiel brut 0 conservé.
+- Catalogue : [PR #14](https://github.com/arcenal-coder/arcenal-systeme-catalogue/pull/14) et [PR #15](https://github.com/arcenal-coder/arcenal-systeme-catalogue/pull/15), fusionnées avec contrôles réussis.
+- Promotion ciblée en preview : [38761047294](https://github.com/arcenal-coder/arcenal-systeme-catalogue/actions/runs/38761047294), réussie.
+- Publication : [38761079416](https://github.com/arcenal-coder/arcenal-systeme-catalogue/actions/runs/38761079416), réussie. Flux raw GitHub et miroir Pages vérifiés : version/révision exactes, niveau 5/working.
 
 ## Contenu
 
@@ -42,7 +48,7 @@ La publication preview reste conditionnée au cycle YunoHost de ce paquet.
 - Formulaire Hermes inspecté en lecture : HTTP, Authentication **Bearer token**,
   champs API `auth=header` et `bearer_token` confirmés.
 
-## Contrôles avant diffusion
+## Séquence de diffusion exécutée
 
 1. Publication autorisée du commit fonctionnel, puis CI complète et construction
    des binaires Linux pour la même révision.

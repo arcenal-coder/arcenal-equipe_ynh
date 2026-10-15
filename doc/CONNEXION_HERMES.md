@@ -65,6 +65,7 @@ Le MCP s’utilise depuis Hermes, qui gère sa propre boucle d’outils. Le dial
 textuel `llm.oneshot` intégré à ARCenal Équipe constitue un parcours distinct.
 Il ne reçoit plus de contexte signé dans ses instructions.
 
-La version installable 0.2.0~ynh2 ne contient pas encore cette gestion des
-connexions ni la correction HTTP 202. Leur diffusion nécessite une nouvelle
-candidate, puis une vérification dans Hermes avec les droits LDAP réels.
+La gestion des connexions et la correction HTTP 202 sont livrées dans
+**0.2.0~ynh3**, publiée en preview. Mettre à jour l’application depuis ce canal
+avant de suivre le parcours ci-dessus. La recette de connexion depuis Hermes
+avec LDAP réel reste à effectuer sur l’installation client mise à jour.

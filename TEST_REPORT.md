@@ -1,8 +1,20 @@
 # Rapport de vérification — ARCenal Équipe 0.2
 
-Statut : **candidate d’installation parallèle 0.2.0~ynh2 vérifiée sur YunoHost 12.1.41.2** ; réception métier avec le client à effectuer.
+Statut : **candidate MCP 0.2.0~ynh3 vérifiée sur YunoHost 12.1.41.2** ; recette de connexion Hermes sur l’installation client à effectuer.
 
-Candidate parallèle actuelle : **0.2.0~ynh2**, binaires **alpha.2** avec correction
+## Candidate MCP standard 0.2.0~ynh3
+
+- Révision figée : `09bc15c42a193463856a937975f1f5a48d13fb6b`, binaires **alpha.3** amd64/arm64, SHA-256 vérifiés par téléchargement.
+- CI native et PostgreSQL 15 réel : [38757866925](https://github.com/arcenal-coder/arcenal-equipe_ynh/actions/runs/38757866925), réussie. 19 tests Rust unitaires et un test d’intégration ; protocole MCP, propriété LDAP des connexions, mutations attribuées, brouillon seul, expiration/révocation et stockage sans jeton brut.
+- Construction Linux : [38757877929](https://github.com/arcenal-coder/arcenal-equipe_ynh/actions/runs/38757877929), réussie sur les deux architectures.
+- Cycle YunoHost : [38758390074](https://github.com/arcenal-coder/arcenal-equipe_ynh/actions/runs/38758390074), six scénarios réussis : root, sous-chemin, upgrade, sauvegarde/restauration, change_url et linter.
+- Qualification technique ARCenal **5**, résultat officiel brut **0** conservé : [38760615395](https://github.com/arcenal-coder/arcenal-equipe_ynh/actions/runs/38760615395). Aucun échec technique ignoré.
+- Formulaire Hermes réellement inspecté : HTTP et Bearer token standard (`auth=header`). Ajout et appel depuis Hermes après mise à jour client : **NON_EXÉCUTÉ**.
+- Documentation de connexion : `doc/CONNEXION_HERMES.md` ; livraison/rollback : `doc/LIVRAISON_MCP.md`.
+
+## Historique de la candidate 0.2.0~ynh2
+
+Candidate parallèle précédente : **0.2.0~ynh2**, binaires **alpha.2** avec correction
 du routage de sous-chemin. Révision testée : `2a75092f96606f4ef969d123615a9384d8084919`.
 Preuve : https://github.com/arcenal-coder/arcenal-equipe_ynh/actions/runs/38531575142
 Les six scénarios du rapport package_check sont réussis ; le classement global

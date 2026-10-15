@@ -1,6 +1,6 @@
 # ARCenal Équipe — premier POC
 
-## Version native 0.2 — livraison en préparation
+## Version native 0.2 — candidate preview
 
 La commande de production est `arcenal-equipe serve` : un service Rust/Axum,
 une base PostgreSQL, sessions utilisateur via le proxy SSO YunoHost
@@ -28,10 +28,10 @@ Voir [la procédure de connexion Hermes](doc/CONNEXION_HERMES.md).
 Les pages privées exigent l’en-tête SSO du proxy attendu et un secret de proxy
 injecté côté Nginx ; ce secret ne paraît jamais dans le navigateur.
 
-**Statut :** MCP standard compilé et testé localement et en CI avec PostgreSQL
-réel ; binaires alpha.3 publiés pour amd64/arm64. Le paquet 0.2.0~ynh3 est en
-vérification YunoHost avant diffusion preview. La candidate précédente
-0.2.0~ynh2 reste la version distribuée tant que cette vérification n’est pas reçue.
+**Statut :** paquet **0.2.0~ynh3** publié en preview, avec MCP standard, binaires
+alpha.3 amd64/arm64 et cycle YunoHost vérifié. La révision distribuée est
+`09bc15c42a193463856a937975f1f5a48d13fb6b`, qualification technique ARCenal 5.
+Voir [les preuves](TEST_REPORT.md) et [la mise à jour](doc/INSTALLATION_PARALLELE.md).
 Victoire et Andréa restent visibles mais leurs domaines complets viennent après
 la réception du recrutement natif. La conversation utilise pour l’instant une
 complétion textuelle Hermes. Les outils MCP s’utilisent depuis le client Hermes ;
